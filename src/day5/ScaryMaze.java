@@ -1,6 +1,7 @@
 package day5;
 
 import java.applet.AudioClip;
+import java.awt.Color;
 import java.awt.Dimension;
 
 import java.awt.Graphics;
@@ -12,25 +13,29 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 import javax.swing.JApplet;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
+
+import day3.SpeakAndSpell;
 
 public class ScaryMaze extends JPanel implements Runnable, MouseMotionListener {
 	
 	BufferedImage maze;
-	final int frameWidth = 600;
-	final int frameHeight = 400;
+	final int frameWidth = 778;
+	final int frameHeight = 800;
 
 	ScaryMaze() throws Exception {
 		//1. Use this online tool to make a maze image and drop it into your day5 package: http://pixlr.com/editor/
 		maze = ImageIO.read(getClass().getResource("maze.png"));
 		//2. set the mouse pointer to the start of your maze using:
 		//new Robot().mouseMove(xPosition, yPosition)
-		
+		new Robot().mouseMove(20,20);
 		//3. add a mouse motion listener using:
 		//addMouseMotionListener(this)
-		
-	}
+		addMouseMotionListener(this);
+		}
+
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
@@ -38,28 +43,42 @@ public class ScaryMaze extends JPanel implements Runnable, MouseMotionListener {
 		int mouseY = e.getY();
 		int mouseColor = maze.getRGB(mouseX, mouseY);
 		//4. print the mouseColor variable to see what color the mouse is touching
-
+//System.out.println(mouseColor);
 		//5. make a variable to hold the background color. 
+int backgroundColor =Color.BLACK.getRGB();
+//6. if the mouse falls off the path (if it is on the background)
+if(mouseColor== backgroundColor) {
+	scare();
 
-		//6. if the mouse falls off the path (if it is on the background)
-		
+}
 				// call the scare method
-		
+
+	
+
 		//10. if the mouse is on the end color
 				
 				// pop up a message to tell them they won
-		
+	if(mouseX > 65 && mouseX < 122 && mouseY > 737 && mouseY < 788){
+		speak("Great Job, you won!... Or did you?..");
+	
+	
+	showScaryImage("Dun Dun Duhn....jpg");
+	JOptionPane.showMessageDialog(null, "Good Luck!");
+	
 	}
+	}
+
+
 
 	private void scare() {
 		System.out.println("BOO!");
 		//7. find a scary sound and put it in the day5 package where you put your maze picture. You can find a sound on freesound.org. Log in as leagueofamazing/code4life.
-		//AudioClip sound = JApplet.newAudioClip(getClass().getResource("scream.wav"));
+		AudioClip sound = JApplet.newAudioClip(getClass().getResource("Scary Sound.wav"));
 		
 		//8. play the scary sound. Hint: type "sound" and then a period.		
-		
+		sound.play();
 		//9. drop an image into your day5 package, and use the showScaryImage method to scare your victim!
-
+		showScaryImage("ScaryImage.jpg");
 	}
 
 	private void showScaryImage(String imageName) {
@@ -77,7 +96,7 @@ public class ScaryMaze extends JPanel implements Runnable, MouseMotionListener {
 
 	@Override
 	public void run() {
-		JFrame frame = new JFrame("June's Scary Maze");
+		JFrame frame = new JFrame("Arnav's Scary Maze");
 		frame.add(this);
 		setPreferredSize(new Dimension(frameWidth, frameHeight));
 		frame.pack();
@@ -93,6 +112,14 @@ public class ScaryMaze extends JPanel implements Runnable, MouseMotionListener {
 
 	@Override
 	public void mouseDragged(MouseEvent e) {}
+	
+	static void speak(String words) {
+		try {
+			Runtime.getRuntime().exec("say " + words).waitFor();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 }
 
